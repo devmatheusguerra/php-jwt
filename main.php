@@ -19,4 +19,5 @@ var_dump($jwt->verify($token));
 
 
 
+JWT::BAD_REQUEST;
 

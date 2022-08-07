@@ -81,6 +81,14 @@ class JWT
         return $hash === $signature;
     }
 
+    public function getClaims(string $token): stdClass
+    {
+        $parts = explode('.', $token);
+        $payload = $parts[1];
+        $claims = json_decode(base64_decode($payload));
+        return $claims;
+    }
+
 
     // Private functions
     private function getHeader(): string
@@ -102,7 +110,7 @@ class JWT
         if($data !== null){
             $payload = (object) array_merge((array)$payload, (array)$data);
         }
-        
+
         $base64UrlPayload = base64_encode(json_encode($payload));
         return $base64UrlPayload;
     }
