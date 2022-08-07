@@ -1,0 +1,22 @@
+{
+    "name": "devmatheusguerra/jwt",
+    "description": "Uma biblioteca para facilitar a utilização de autenticação JWT.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+            "src/config.php"
+        ],
+        "psr-4": {
+            "Devmatheusguerra\\JWT\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matheus Guerra",
+            "email": "matheusmga1998@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
