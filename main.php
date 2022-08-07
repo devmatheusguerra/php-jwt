@@ -9,7 +9,11 @@ $data = new stdClass();
 $data->name = 'Devmatheusguerra';
 $data->email = 'teste@gmail.com';
 
-$token = $jwt->generate($data);
+$token = $jwt->generate();
+
+var_dump($token);
+
+var_dump($jwt->verify($token));
 
 
 

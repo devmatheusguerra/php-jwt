@@ -15,7 +15,7 @@ class JWT
     const BAD_REQUEST = 400;
     const SUCCESS = 200;
     const CREATED = 201;
-    
+
     function __construct()
     {
         try{
@@ -31,7 +31,7 @@ class JWT
         }
     }
     
-    function generate(stdClass $data): string
+    function generate(stdClass|null $data = null): string
     {   
         $header = $this->getHeader();
         $payload = $this->getPayload($data);
@@ -92,13 +92,17 @@ class JWT
         return $base64UrlHeader;
     }
 
-    private function getPayload(stdClass $data): string
+    private function getPayload(stdClass|null $data = null): string
     {
         $payload = new stdClass();
         $payload->iss = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $payload->iat = time();
         $payload->exp = time() + (60 * 60 * 24);
-        $payload = (object) array_merge((array)$payload, (array)$data);
+
+        if($data !== null){
+            $payload = (object) array_merge((array)$payload, (array)$data);
+        }
+        
         $base64UrlPayload = base64_encode(json_encode($payload));
         return $base64UrlPayload;
     }
