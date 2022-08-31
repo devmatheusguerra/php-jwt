@@ -3,6 +3,7 @@
     "description": "Uma biblioteca para facilitar a utilização de autenticação JWT.",
     "type": "library",
     "license": "MIT",
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Devmatheusguerra\\JWT\\": "src/"
