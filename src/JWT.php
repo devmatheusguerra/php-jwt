@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '../../vendor/autoload.php';
-
 namespace Devmatheusguerra\JWT;
+
+require explode('vendor/', __DIR__)[0] . 'vendor/autoload.php';
 
 use FFI\Exception;
 use stdClass;
