@@ -1,4 +1,5 @@
 <?php
+require __DIR__ . '../../vendor/autoload.php';
 
 namespace Devmatheusguerra\JWT;
 
@@ -19,7 +20,7 @@ class JWT
     function __construct()
     {
         try{
-            $this->secret_key = SECRET_KEY_JWT;
+            $this->secret_key =  SECRET_KEY_JWT;
         }catch(Exception $e){
             throw new Exception("Secret key not found");
         }
