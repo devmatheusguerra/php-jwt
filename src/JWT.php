@@ -36,21 +36,24 @@ class JWT
     {   
         $header = $this->getHeader();
         $payload = $this->getPayload($data);
+
         switch($this->algorithm){
             case 'HS256':
-                $signature = hash_hmac('sha256', $header . '.' . $payload, $this->secret_key, false);
+                $signature = hash_hmac('sha256', "$header.$payload", $this->secret_key, true);
                 break;
             case 'HS384':
-                $signature = hash_hmac('sha384', $header . '.' . $payload, $this->secret_key, false);
+                $signature = hash_hmac('sha384', "$header.$payload", $this->secret_key, true);
                 break;
             case 'HS512':
-                $signature = hash_hmac('sha512', $header . '.' . $payload, $this->secret_key, false);
+                $signature = hash_hmac('sha512', "$header.$payload", $this->secret_key, true);
                 break;
             default:
                 throw new Exception('Algorithm not supported');
         }
+
+        $signature = str_replace(['+','/','='], ['-','_',''],base64_encode($signature));
         
-        return "$header.$payload.$signature";
+        return $header . '.' . $payload . '.' . $signature;
 
     }
 
