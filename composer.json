@@ -1,6 +1,6 @@
 {
     "name": "devmatheusguerra/jwt",
-    "description": "Uma biblioteca para facilitar a utilização de autenticação JWT.",
+    "description": "Uma biblioteca PHP para facilitar a utilização de autenticação JWT.",
     "type": "library",
     "license": "MIT",
     "minimum-stability": "stable",
