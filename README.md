@@ -46,12 +46,16 @@ Retorna uma ***string*** correspondente ao ***token gerado***.
 Possui um parâmetro **obrigatório** que corresponde ao token que foi recebido através da requisição do cliente.
 
 #### Parâmetros
-| Nome | Tipo | Obrigatório |
-|--|--|--|
-| token | **string** |  ![Sim](https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/16/Accept-icon.png)|
+| Nome | Tipo | **Default** | Obrigatório |
+|--|--|--|--|
+| token | **string** | - |![Sim](https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/16/Accept-icon.png)|
+| iss | **boolean** | **false** |![Não](https://icons.iconarchive.com/icons/hopstarter/button/16/Button-Delete-icon.png) |
+
 
 #### Retorno
-Retorna uma ***boolean***. Verdadeiro se o token passado for válido.
+Retorna um ***boolean***. Se o parâmetro ```ìss``` estiver **false** será analisada se a assinatura do token é válida. Do contrário, a requisição também deverá vir da mesma origem cujo token foi gerado.
+
+
 
 ### 4. Método getClaims()
 Possui um parâmetro **obrigatório** que corresponde ao token que foi recebido através da requisição do cliente.
@@ -59,6 +63,7 @@ Possui um parâmetro **obrigatório** que corresponde ao token que foi recebido 
 #### Parâmetros
 | Nome | Tipo | Obrigatório |
 |--|--|--|
+| token | **string** |  ![Sim](https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/16/Accept-icon.png)|
 | token | **string** |  ![Sim](https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/16/Accept-icon.png)|
 
 #### Retorno
