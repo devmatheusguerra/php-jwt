@@ -51,7 +51,7 @@ class JWT
                 throw new Exception('Algorithm not supported');
         }
 
-        $signature = str_replace(['+','/','='], ['-','_',''],base64_encode($signature));
+        $signature = $this->base64url_encode(base64_encode($signature));
         
         return $header . '.' . $payload . '.' . $signature;
 
@@ -59,7 +59,7 @@ class JWT
 
 
 
-    function verify(string $token): bool
+    function verify(string $token, bool $iss = false): bool
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {
@@ -82,6 +82,14 @@ class JWT
             default:
                 throw new Exception('Algorithm not supported');
         }
+
+        if($iss){
+            $payload = json_decode($this->base64url_decode($payload));
+            if($payload->iss !== $_SERVER['HTTP_HOST']){
+                return false;
+            }
+        }
+
         return $hash === $signature;
     }
 
@@ -95,6 +103,16 @@ class JWT
 
 
     // Private functions
+
+    private function base64url_encode(string $data): string
+    {
+        return str_replace(['+','/','='], ['-','_',''], $data);
+    }
+    private function base64url_decode(string $data): string
+    {
+        return base64_decode(str_replace(['-','_'], ['+','/'], $data));
+    }
+
     private function getHeader(): string
     {
         $header = new stdClass();
