@@ -59,7 +59,7 @@ class JWT
 
 
 
-    function verify(string $token, bool $ip = false): bool
+    function verify(string $token, bool $ip = false): stdClass
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {
