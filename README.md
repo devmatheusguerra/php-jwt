@@ -1,6 +1,3 @@
-# Documentação
-
-
 ### [![Release Version](https://img.shields.io/github/v/tag/devmatheusguerra/php-jwt?color=%230f9f0f&label=release&style=for-the-badge)](https://github.com/devmatheusguerra/php-jwt)
 
 ## Pacote PHP que implementa JSON Web Token.
