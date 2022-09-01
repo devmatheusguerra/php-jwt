@@ -83,6 +83,8 @@ class JWT
                 throw new Exception('Algorithm not supported');
         }
 
+        $hash = $this->base64url_encode(base64_encode($hash));
+        
         if($iss){
             $payload = json_decode($this->base64url_decode($payload));
             if($payload->iss !== $_SERVER['HTTP_HOST']){
