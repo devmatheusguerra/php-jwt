@@ -1,4 +1,5 @@
 <?php
+
 namespace Devmatheusguerra\JWT;
 
 require explode('vendor/', __DIR__)[0] . 'vendor/autoload.php';
@@ -6,7 +7,7 @@ require explode('vendor/', __DIR__)[0] . 'vendor/autoload.php';
 use FFI\Exception;
 use stdClass;
 
-class JWT 
+class JWT
 {
     private $secret_key;
     private $algorithm;
@@ -19,25 +20,25 @@ class JWT
 
     function __construct()
     {
-        try{
+        try {
             $this->secret_key =  SECRET_KEY_JWT;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new Exception("Secret key not found");
         }
 
-        try{
+        try {
             $this->algorithm = ALGORITHM_JWT;
-        }catch(Exception $e){
+        } catch (Exception $e) {
             throw new Exception("Algorithm not found");
         }
     }
-    
+
     function generate(stdClass|null $data = null): string
-    {   
+    {
         $header = $this->getHeader();
         $payload = $this->getPayload($data);
 
-        switch($this->algorithm){
+        switch ($this->algorithm) {
             case 'HS256':
                 $signature = hash_hmac('sha256', "$header.$payload", $this->secret_key, true);
                 break;
@@ -52,9 +53,8 @@ class JWT
         }
 
         $signature = $this->base64url_encode(base64_encode($signature));
-        
-        return $header . '.' . $payload . '.' . $signature;
 
+        return $header . '.' . $payload . '.' . $signature;
     }
 
 
@@ -69,7 +69,7 @@ class JWT
         $payload = $parts[1];
         $signature = $parts[2];
         $data = "$header.$payload";
-        switch($this->algorithm){
+        switch ($this->algorithm) {
             case 'HS256':
                 $hash = hash_hmac('sha256', $data, $this->secret_key, false);
                 break;
@@ -84,14 +84,21 @@ class JWT
         }
 
         $hash = $this->base64url_encode(base64_encode($hash));
-        
-        if($iss){
+
+        // Verify if the token's origin is the same as the issuer
+        if ($iss) {
             $payload = json_decode($this->base64url_decode($payload));
-            if($payload->iss !== $_SERVER['HTTP_HOST']){
+            if ($payload->iss !== $_SERVER['HTTP_HOST']) {
                 return false;
             }
         }
 
+        // Verify if it's not expired
+        if ($this->hasExpired($payload)) {
+            return false;
+        }
+
+        // Verify if the signature is the same
         return $hash === $signature;
     }
 
@@ -105,14 +112,24 @@ class JWT
 
 
     // Private functions
+    private function hasExpired(string $text): bool
+    {
+        $now = time();
+        $payload = json_decode($this->base64url_decode($text));
+        if (isset($payload->exp)) {
+            if ($payload->exp < $now) {
+                return true;
+            }
+        }
+    }
 
     private function base64url_encode(string $data): string
     {
-        return str_replace(['+','/','='], ['-','_',''], $data);
+        return str_replace(['+', '/', '='], ['-', '_', ''], $data);
     }
     private function base64url_decode(string $data): string
     {
-        return base64_decode(str_replace(['-','_'], ['+','/'], $data));
+        return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
     }
 
     private function getHeader(): string
@@ -131,7 +148,7 @@ class JWT
         $payload->iat = time();
         $payload->exp = time() + (60 * 60 * 24);
 
-        if($data !== null){
+        if ($data !== null) {
             $payload = (object) array_merge((array)$payload, (array)$data);
         }
 
