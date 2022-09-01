@@ -91,7 +91,7 @@ class JWT
         if ($ip) {
             $payload = json_decode($this->base64url_decode($payload));
             if ($payload->ip !== $_SERVER['REMOTE_ADDR']) {
-                $data->message = 'Invalid IP';
+                $data->message = 'Invalid IP.';
                 $data->status = self::FORBIDDEN;
                 $data->response = false;
                 return $data;
@@ -99,7 +99,7 @@ class JWT
         }
         // Verify if the signature is the same
         if ($signature !== $hash) {
-            $data->message = 'Invalid signature';
+            $data->message = 'Invalid signature.';
             $data->status = self::FORBIDDEN;
             $data->response = false;
             return $data;
@@ -108,13 +108,13 @@ class JWT
         
         // Verify if it's not expired
         if ($this->hasExpired($payload)) {
-            $data->message = 'Token expired';
+            $data->message = 'Token expired.';
             $data->status = self::FORBIDDEN;
             $data->response = false;
             return $data;
         }
 
-        $data->message = 'Token valid';
+        $data->message = 'Token valid.';
         $data->status = self::SUCCESS;
         $data->response = true;
         return $data;
