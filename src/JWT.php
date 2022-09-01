@@ -85,21 +85,40 @@ class JWT
 
         $hash = $this->base64url_encode(base64_encode($hash));
 
+
+        $data = new stdClass();
         // Verify if the token's origin is the same as the issuer
         if ($iss) {
             $payload = json_decode($this->base64url_decode($payload));
             if ($payload->iss !== $_SERVER['HTTP_HOST']) {
-                return false;
+                $data->message = 'Invalid issuer';
+                $data->status = self::FORBIDDEN;
+                $data->response = false;
+                return $data;
             }
         }
 
         // Verify if it's not expired
         if ($this->hasExpired($payload)) {
-            return false;
+            $data->message = 'Token expired';
+            $data->status = self::FORBIDDEN;
+            $data->response = false;
+            return $data;
         }
 
         // Verify if the signature is the same
-        return $hash === $signature;
+        if ($signature !== $hash) {
+            $data->message = 'Invalid signature';
+            $data->status = self::FORBIDDEN;
+            $data->response = false;
+            return $data;
+            
+        }
+
+        $data->message = 'Token valid';
+        $data->status = self::SUCCESS;
+        $data->response = true;
+        return $data;
     }
 
     public function getClaims(string $token): stdClass
