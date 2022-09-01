@@ -1,4 +1,7 @@
 # Documentação
+
+### [![Release Version](https://img.shields.io/github/v/tag/devmatheusguerra/php-jwt?color=%230f9f0f&label=release&style=for-the-badge)](https://github.com/devmatheusguerra/php-jwt)
+
 ## Pacote PHP que implementa JSON Web Token.
 
 ### Uso simples
@@ -49,13 +52,41 @@ Possui um parâmetro **obrigatório** que corresponde ao token que foi recebido 
 | Nome | Tipo | **Default** | Obrigatório |
 |--|--|--|--|
 | token | **string** | - |![Sim](https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/16/Accept-icon.png)|
-| iss | **boolean** | **false** |![Não](https://icons.iconarchive.com/icons/hopstarter/button/16/Button-Delete-icon.png) |
+| ip | **boolean** | **false** |![Não](https://icons.iconarchive.com/icons/hopstarter/button/16/Button-Delete-icon.png) |
 
 
 #### Retorno
-Retorna um ***boolean***. Se o parâmetro ```ìss``` estiver **false** será analisada se a assinatura do token é válida. Do contrário, a requisição também deverá vir da mesma origem cujo token foi gerado.
+Retorna um ***stdClass***. Se o parâmetro ```ìp``` estiver **false** será analisada se a assinatura do token é válida e se o token não expirou. Do contrário, a requisição também deverá vir da mesma origem cujo token foi gerado.
 
+## Possíveis retornos.
 
+##### ```ip != $_SERVER['REMOTE_ADDR']```
+```
+message => Invalid IP 
+status => 403
+response => false
+```
+
+##### ```signature != token_signature```
+```
+message => Invalid signature'
+status => 403
+response => false
+```
+
+##### ```exp > now()```
+```
+message => Token expired
+status => 403
+response => false
+```
+
+##### ```Nenhuma das anteriores```
+```
+message => Token valid
+status => 200
+response => true
+```
 
 ### 4. Método getClaims()
 Possui um parâmetro **obrigatório** que corresponde ao token que foi recebido através da requisição do cliente.

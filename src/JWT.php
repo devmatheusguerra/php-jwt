@@ -59,7 +59,7 @@ class JWT
 
 
 
-    function verify(string $token, bool $iss = false): bool
+    function verify(string $token, bool $ip = false): bool
     {
         $parts = explode('.', $token);
         if (count($parts) !== 3) {
@@ -88,24 +88,15 @@ class JWT
 
         $data = new stdClass();
         // Verify if the token's origin is the same as the issuer
-        if ($iss) {
+        if ($ip) {
             $payload = json_decode($this->base64url_decode($payload));
-            if ($payload->iss !== $_SERVER['HTTP_HOST']) {
-                $data->message = 'Invalid issuer';
+            if ($payload->ip !== $_SERVER['REMOTE_ADDR']) {
+                $data->message = 'Invalid IP';
                 $data->status = self::FORBIDDEN;
                 $data->response = false;
                 return $data;
             }
         }
-
-        // Verify if it's not expired
-        if ($this->hasExpired($payload)) {
-            $data->message = 'Token expired';
-            $data->status = self::FORBIDDEN;
-            $data->response = false;
-            return $data;
-        }
-
         // Verify if the signature is the same
         if ($signature !== $hash) {
             $data->message = 'Invalid signature';
@@ -113,6 +104,14 @@ class JWT
             $data->response = false;
             return $data;
             
+        }
+        
+        // Verify if it's not expired
+        if ($this->hasExpired($payload)) {
+            $data->message = 'Token expired';
+            $data->status = self::FORBIDDEN;
+            $data->response = false;
+            return $data;
         }
 
         $data->message = 'Token valid';
@@ -140,6 +139,8 @@ class JWT
                 return true;
             }
         }
+
+        return false;
     }
 
     private function base64url_encode(string $data): string
@@ -165,6 +166,7 @@ class JWT
         $payload = new stdClass();
         $payload->iss = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $payload->iat = time();
+        $payload->ip = $_SERVER['REMOTE_ADDR'];
         $payload->exp = time() + (60 * 60 * 24);
 
         if ($data !== null) {
