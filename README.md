@@ -33,6 +33,7 @@ Possui um parâmetro **não obrigatório** que corresponde ao dados personalizad
 
 Por padrão já serão declarados alguns claim names:
 - **iss:** Receberá o endereço do host ou localhost.
+- **ip:** Receberá o endereço IP do solicitante.
 - **iat:** Utilizará o instante atual da chamada da função em *UNIX TIMESTAMP*.
 - **exp:** por padrão o token irá expirar em 24 horas após a chamada.
 
