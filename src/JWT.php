@@ -71,13 +71,13 @@ class JWT
         $data = "$header.$payload";
         switch ($this->algorithm) {
             case 'HS256':
-                $hash = hash_hmac('sha256', $data, $this->secret_key, false);
+                $hash = hash_hmac('sha256', $data, $this->secret_key, true);
                 break;
             case 'HS384':
-                $hash = hash_hmac('sha384', $data, $this->secret_key, false);
+                $hash = hash_hmac('sha384', $data, $this->secret_key, true);
                 break;
             case 'HS512':
-                $hash = hash_hmac('sha512', $data, $this->secret_key, false);
+                $hash = hash_hmac('sha512', $data, $this->secret_key, true);
                 break;
             default:
                 throw new Exception('Algorithm not supported');
